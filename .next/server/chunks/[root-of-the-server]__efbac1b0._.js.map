@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
+    {"offset": {"line": 65, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/m/Desktop/TodoLApp_Nextjs/app/todos/route.js"],"sourcesContent":["import { readFile, writeFile } from \"node:fs/promises\";\r\nimport todos from \"../../todos\";\r\n\r\nexport async function GET() {\r\n  const todoJSONString = await readFile(\"./todos.json\", \"utf-8\");\r\n  const todos = JSON.parse(todoJSONString);\r\n  return Response.json(todos);\r\n}\r\n\r\nexport async function POST(request) {\r\n  const todo = await request.json();\r\n  const newTodo = {\r\n    id: crypto.randomUUID(),\r\n    text: todo.text,\r\n    completed: false,\r\n  };\r\n\r\n  todos.push(newTodo);\r\n  await writeFile(\"todos.json\", JSON.stringify(todos, null, 2));\r\n  return Response.json(newTodo, {\r\n    status: 201,\r\n  });\r\n}\r\n"],"names":[],"mappings":";;;;AAAA;AACA;;;AAEO,eAAe;IACpB,MAAM,iBAAiB,MAAM,CAAA,GAAA,qIAAA,CAAA,WAAQ,AAAD,EAAE,gBAAgB;IACtD,MAAM,QAAQ,KAAK,KAAK,CAAC;IACzB,OAAO,SAAS,IAAI,CAAC;AACvB;AAEO,eAAe,KAAK,OAAO;IAChC,MAAM,OAAO,MAAM,QAAQ,IAAI;IAC/B,MAAM,UAAU;QACd,IAAI,OAAO,UAAU;QACrB,MAAM,KAAK,IAAI;QACf,WAAW;IACb;IAEA,6EAAA,CAAA,UAAK,CAAC,IAAI,CAAC;IACX,MAAM,CAAA,GAAA,qIAAA,CAAA,YAAS,AAAD,EAAE,cAAc,KAAK,SAAS,CAAC,6EAAA,CAAA,UAAK,EAAE,MAAM;IAC1D,OAAO,SAAS,IAAI,CAAC,SAAS;QAC5B,QAAQ;IACV;AACF","debugId":null}}]
+}
