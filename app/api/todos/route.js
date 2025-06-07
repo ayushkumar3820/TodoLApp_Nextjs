@@ -1,9 +1,12 @@
 import { readFile, writeFile } from "node:fs/promises";
-import todos from "../../todos";
+import todos from  "../../../todos.json";
 import { connectDb } from "@/lib/database";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 import Todo from "@/model/todoModel";
 import { cookies } from "next/headers";
+import User from "@/model/userModel";
+import getLoggedInUser from "@/lib/auth";
+// import { cookies } from "next/headers";
 // import db from "../../lib/database";
 
 export async function GET() {
@@ -33,9 +36,14 @@ export async function GET() {
 
   // return Response.json(newTodo);
 
-  const cookie=await  cookies();
+  // const cookie=await  cookies();
   
-  const newTodo = await Todo.find();
+  const user=await getLoggedInUser()
+  console.log(user);    
+  if(user instanceof getLoggedInUser){
+    return user;
+  }
+  const newTodo = await Todo.find({userId:user.id});
 
 //  console.log(cookies.get("userId").value)
 // cookie.set("userid","123",{
@@ -59,22 +67,39 @@ export async function GET() {
 
 export async function POST(request) {
   await connectDb();
-  const todo = await request.json();
+
+
+  // const cookieStore=await cookies();
+  // const userId=cookieStore.get("userId")?.value;
+  // const user = await User.findById(userId);
+
+  // if(!user){
+  //   return Response.json({error:"pls login"},{status:401})
+  // }
+
+  // const todo = await reqest.json();
+
   // const newTodo = {
   //   id: crypto.randomUUID(),
   //   text: todo.text,
   //   completed: false,
   // };
 
-  const { id, text, completed } = await Todo.create({ text: todo.text });
+  const user=await getLoggedInUser()
+  console.log(user);    
+  if(user instanceof getLoggedInUser){
+    return user;
+  }
+const allTodos=await Todo.find({userId});
+  // const { id, text, completed, } = await Todo.create({ text: todo.text,userId });
 
-  todos.push(newTodo);
-  await writeFile("todos.json", JSON.stringify(todos, null, 2));
+  // todos.push(newTodo);
+  // await writeFile("todos.json", JSON.stringify(todos, null, 2));
   // return Response.json(newTodo, {
   //   status: 201,
   // });
 
-  return Response.json(id, text, completed, {
+  return Response.json(id, text, completed,user,   {
     status: 201,
   });
 }

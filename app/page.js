@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import TodoList from "../compoments/TodoList";
 import TodoForm from "../compoments/TodoForm";
 import { useTheme } from "next-themes";
-import { MoonIcon, SunIcon } from "lucide-react";
+import { MoonIcon, Router, SunIcon } from "lucide-react";
 
 export default function Home() {
   const [todos, setTodos] = useState([]);
@@ -19,6 +19,12 @@ export default function Home() {
       credentials:"include"
     });
     const todosData = await response.json();
+    if(response.status === 401){
+      return Router.push("/login");
+    }
+    if(!data.error){
+      return Router.push("/");
+    }
     setTodos(todosData.reverse());
   };
 

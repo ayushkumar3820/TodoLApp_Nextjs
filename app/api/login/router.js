@@ -15,7 +15,7 @@ export default async function POST(request) {
     }
     cookie.set("userId", user.id, {
       httpOnly: true,
-      maxAge: 60,
+      maxAge: 60*60*24,
     });
 
     return Response.json(user,{
